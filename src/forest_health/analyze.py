@@ -1,18 +1,12 @@
-from transformers import AutoModelForImageClassification
+from transformers import ViTForImageClassification
 from .process import process_image
 
-# Load the model
-model = AutoModelForImageClassification.from_pretrained("ibm-nasa-geospatial/prithvi-large")
+model = ViTForImageClassification.from_pretrained("google/vit-base-patch16-224-in21k", ignore_mismatched_sizes=True)
 
 def analyze_forest_health(image):
     """
-    Analyze the forest health from satellite image using the IBM pre-trained model.
-    Args:
-        image (PIL.Image): The satellite image.
-    Returns:
-        predictions (dict): Forest health predictions.
+    Analyze the forest health from satellite image using the pre-trained model.
     """
     inputs = process_image(image)
     outputs = model(**inputs)
-    predictions = outputs.logits.softmax(dim=1).detach().numpy()
-    return predictions
+    return outputs.logits.softmax(dim=1).detach().numpy()
